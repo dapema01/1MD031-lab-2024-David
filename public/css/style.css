@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Agbalumo&family=Cormorant:wght@700&display=swap');
 body {
     font-size: 12pt;
+    font-family: arial;
 }
 
 p {
@@ -17,6 +18,7 @@ main, header, footer, nav ul {
 }
 main {
     background-color: bisque;
+    padding: 20px;
 }
 
 /* nav ul li {
@@ -36,9 +38,13 @@ header {
 }
 
 header h1 {
-    width:40rem;
+    width: 40rem;
     margin: 0 auto;
     text-align: center;
+}
+
+ul {
+    text-align: left;
 }
 
 nav ul {
@@ -62,3 +68,87 @@ nav li {
     color: green;
     font-weight: bold;
 }
+
+#Headline {
+    margin: 0;
+    padding: 0;
+    height: 250px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+#Headline h1 {
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    z-index: 1;
+    padding:10px;
+}
+
+#Headline img{
+    width: 100%;
+    justify-content: center;
+    opacity: 0.3;
+}
+
+#tabSec img{
+    height: 100px;
+}
+#tabSec {
+    
+    border: 2px dashed red;
+}
+
+#tabSec div {
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    width: 200px;
+}
+
+.Ingridients {
+    font-weight: bold;
+}
+
+
+#contact {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed white;
+    padding: 20px;
+}
+
+
+form p {
+    color: white;
+    padding: 10px 20px;
+    max-height: 100%
+}
+
+#submit button {
+    background-color: black; 
+    color: white;
+    padding: 30px;
+    cursor: pointer; 
+}
+
+#contact button:hover {
+    background-color: #8e759f; 
+}
+
+
+#tabSec {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 200px 200px 200px;
+    justify-content: center;
+}
+
