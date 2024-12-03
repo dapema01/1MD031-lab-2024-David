@@ -37,6 +37,7 @@ export default {
     watch: {
       amountOrdered(value) {
         if (value < 0) this.amountOrdered = 0;
+        this.$emit("update-order", { burger: this.burger, amount: this.amountOrdered});
       }
     }
   

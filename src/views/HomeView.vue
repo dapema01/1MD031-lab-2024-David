@@ -15,7 +15,8 @@
     <section id="tabSec">
       <h2>Menu</h2>
         <div class="burger-grid">
-            <Burger v-for="burger in burgers" :key="burger.name" :burger="burger" />
+            <Burger v-for="burger in burgers" :key="burger.name" :burger="burger" @update-order="updateOrder"/>
+            
         </div>
       </section>
     <section id="contact">
@@ -29,15 +30,7 @@
             <p>
                 <label for="email">Email</label><br>
                 <input type="email" id="email" name="em" v-model="formData.email" required="required" placeholder="E-mail address">
-            </p>
-            <p>
-                <label for="streetname">Street Name</label><br>
-                <input type="text" id="streetname" name="sn" v-model="formData.streetname" required="required" placeholder="Street name">
-            </p>
-            <p>
-                <label for="housenumber">House Number</label><br>
-                <input type="number" id="housenumber" name="hn" v-model="formData.housenumber" required="required" placeholder="House number">
-            </p>      
+            </p>    
             <p>
                 <label for="payment">Payment Method</label><br>
                 <select id="paymetn" name="pm" v-model="formData.payment">
@@ -50,20 +43,24 @@
             
             <p>
                     <label for="gender">Select your gender</label><br>
-                    <input type="radio" id="man" name="gender" value="man" v-model="formData.gender">
-                    <label for="man">Man</label><br>
+                    <input type="radio" id="male" name="gender" value="Male" v-model="formData.gender">
+                    <label for="male">Male</label><br>
                     
-                    <input type="radio" id="woman" name="gender" value="woman" v-model="formData.gender">
-                    <label for="woman">Woman</label><br>
+                    <input type="radio" id="female" name="gender" value="Female" v-model="formData.gender">
+                    <label for="female">Female</label><br>
                     
-                    <input type="radio" id="no-gender" name="gender" value="no-gender" v-model="formData.gender">
+                    <input type="radio" id="no-gender" name="gender" value="No-gender" v-model="formData.gender">
                     <label for="no-gender">Do not wish to provide</label>
             </p>    
         </form>
 
         <div id="map-container">
-            <div id="map" v-on:click="placeDot"></div><!-- v-on:click="addOrder" -->
-            <div v-if="dot" :style="getDotStyle(dot)" class="dot"></div>
+            <div id="map" v-on:click="setLocation"><!-- v-on:click="addOrder" -->
+                <div v-if="location.x !== 0 && location.y !== 0" class="dot"
+                    :style="{ left: location.x + 'px', top: location.y + 'px' }">
+                    T
+                </div>
+            </div>
         </div>
             <button type="submit" @click="handleSubmit">
                 <img src="/img/png-clipart-submit-button-illustration-submit-button-icons-logos-emojis-submit-thumbnail.png">
@@ -116,8 +113,6 @@ export default {
       formData: {
         fullname: "",
         email: "",
-        streetname: "",
-        housenumber: "",
         payment: "",
         gender:""
       },
@@ -125,43 +120,50 @@ export default {
     }
   },
   methods: {
+    updateOrder({burger, amount})
+    {
+      if(amount === 0)
+      {
+        delete this.orderedBurgers[burger.name];
+      }
+      else
+      {
+        this.orderedBurgers[burger.name] = amount;
+      }
+      console.log(this.orderedBurgers);
+    },
+
     getOrderNumber: function () {
       return Math.floor(Math.random()*100000);
     },
-    addOrder: function (event) {
-      var offset = {x: event.currentTarget.getBoundingClientRect().left,
-                    y: event.currentTarget.getBoundingClientRect().top};
-      socket.emit("addOrder", { orderId: this.getOrderNumber(),
-                                details: { x: event.clientX - 10 - offset.x,
-                                           y: event.clientY - 10 - offset.y },
-                                orderItems: ["Beans", "Curry"]
-                              }
-                 );
-    },
     handleSubmit: function () {
-      console.log("Order submitted");
-      console.log(this.formData);
-    
-      if(!this.formData.fullname || !this.formData.email || !this.formData.streetname || !this.formData.housenumber || !this.formData.payment){
+
+      if(!this.formData.fullname || !this.formData.email || !this.formData.payment || Object.keys(this.orderedBurgers).length === 0 || !this.location.x || !this.location.y){
         alert("Please fill in all fields");
-        console.log("Unsuccessfully");
+        console.log("Order submited unsuccessfully");
         return;
       }
-      alert("Order submitted");
-      console.log(this.orderedBurgers);
+        alert("Order submitted successfully");
+        socket.emit("addOrder", { orderId: this.getOrderNumber(),
+                                details: { 
+                                    x: this.location.x,
+                                    y: this.location.y,
+                                    name: this.formData.fullname,
+                                    email: this.formData.email,
+                                    payment: this.formData.payment,
+                                    gender: this.formData.gender
+                                },
+                                orderItems: this.orderedBurgers,
+                            });
+        console.log("Order submited successfully");
     },
-    placeDots: function (event){
-        var offset = {
-            x: event.currentTarget.getBoundingClientRect().left,
-            y: event.currentTarget.getBoundingClientRect().top
-        }
-        this.dot = {
-            x: event.clientX - offset.x,
-            y: event.clientY - offset.y
-        }
-
+    setLocation: function (event){
+    
+        const mapRect = event.currentTarget.getBoundingClientRect();
+        this.location.x = event.clientX - mapRect.left;
+        this.location.y = event.clientY - mapRect.top;
     }
-  }
+    }
 };
 </script>
 
@@ -286,10 +288,10 @@ nav li {
 
 .burger-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr; /* Responsive columns */
-  grid-gap: 20px; /* Space between grid items */
+  grid-template-columns: 1fr 1fr 1fr; 
+  grid-gap: 20px;
   padding: 20px;
-  justify-items: center; /* Center the content of each grid item */
+  justify-items: center; 
 }
 
 .Ingridients {
@@ -332,6 +334,7 @@ form p {
     height: 100%;
     object-fit: contain;
     border-radius: 5px;
+    
 }
 #contact button:hover {
     transform: scale(1.1);
@@ -342,18 +345,29 @@ form p {
   height: 539px; 
   overflow: scroll; 
   border: 1px solid #ccc; 
+  
 }
 
 #map {
-  width: 1920px;
-  height: 1078px; 
-  background: url("/img/polacks.jpg") no-repeat center center;
-  background-size: cover;
-  cursor: pointer;
+    position: relative;
+    width: 1920px;
+    height: 1078px; 
+    background: url("/img/polacks.jpg") no-repeat center center;
+    background-size: cover;
+    cursor: pointer;
 }
 
 .dot {
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    background: black;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+    transform: translate(-50%, -50%);
 }
 
 
