@@ -1,21 +1,23 @@
-[{
-    "name": "Veggie Bliss", 
-    "kCal": 500, 
-    "url": "https://images-bonnier.imgix.net/files/ifo/production/20220412084608/Kødfri-burger-1.jpg?auto=compress,format&w=1024%201024w",
-    "lactose": false, 
-    "gluten": false
-},
-{
-    "name": "Veggie Bliss", 
-    "kCal": 500, 
-    "url": "https://images-bonnier.imgix.net/files/ifo/production/20220412084608/Kødfri-burger-1.jpg?auto=compress,format&w=1024%201024w",
-    "lactose": false, 
-    "gluten": false
-},
-{
-    "name": "Veggie Bliss", 
-    "kCal": 500, 
-    "url": "https://images-bonnier.imgix.net/files/ifo/production/20220412084608/Kødfri-burger-1.jpg?auto=compress,format&w=1024%201024w",
-    "lactose": false, 
-    "gluten": false
-}]
+[
+    {
+      "name": "The Fire Burger",
+      "kCal": 500,
+      "lactose": false,
+      "gluten": true,
+      "imageUrl": "/img/eldburgare.webp"
+    },
+    {
+      "name": "Cheeseburger",
+      "kCal": 600,
+      "lactose": true,
+      "gluten": true,
+      "imageUrl": "/img/cheeese.avif"
+    },
+    {
+      "name": "Halloumi Burger",
+      "kCal": 450,
+      "lactose": true,
+      "gluten": true,
+      "imageUrl": "/img/halloumiburgare.jpg"
+    }
+  ]
